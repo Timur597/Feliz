@@ -49,7 +49,6 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['username']
 
-
     objects = MyAccountManager()
 
     def __str__(self):
