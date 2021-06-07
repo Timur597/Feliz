@@ -7,9 +7,11 @@ from rest_framework.authtoken.models import Token
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, phone, username, password=None):
         if not email:
             raise ValueError('У пользователей должен быть адрес электронной почты.')
+        if not phone:
+            raise ValueError('У пользователей должен быть номер телефона.')
         if not username:
             raise ValueError('У пользователей должно быть имя пользователя.')
 
@@ -22,8 +24,9 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, password):
+    def create_superuser(self, email, phone, username, password):
         user = self.create_user(
+            phone=phone,
             email=self.normalize_email(email),
             password=password,
             username=username,
@@ -36,7 +39,7 @@ class MyAccountManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    email = models.EmailField(verbose_name="email", max_length=60, blank=True, unique=True)
+    email = models.EmailField(verbose_name="email", max_length=60, blank=True, unique=True, )
     username = models.CharField(max_length=30, unique=True,  verbose_name='Имя пользователя')
     phone = models.CharField(max_length=255, unique=True, verbose_name='Номер телефона')
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
@@ -45,6 +48,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    is_seller = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['username']
