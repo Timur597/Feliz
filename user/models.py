@@ -18,6 +18,7 @@ class MyAccountManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
+            phone=phone,
         )
 
         user.set_password(password)
@@ -39,7 +40,7 @@ class MyAccountManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    email = models.EmailField(verbose_name="email", max_length=60, blank=True, unique=True, )
+    email = models.EmailField(verbose_name="email", max_length=60, blank=True, unique=True)
     username = models.CharField(max_length=30, unique=True,  verbose_name='Имя пользователя')
     phone = models.CharField(max_length=255, unique=True, verbose_name='Номер телефона')
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
@@ -51,7 +52,7 @@ class User(AbstractBaseUser):
     is_seller = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'email']
 
     objects = MyAccountManager()
 
